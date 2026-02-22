@@ -1,0 +1,32 @@
+services:
+  api_local:
+    build: .
+    command: ./node_modules/.bin/nodemon -L server.js
+    env_file:
+      - .env.local
+    ports:
+      - "4000:4000"
+    depends_on:
+      - mongodb
+    links:
+      - mongodb
+    volumes:
+      - ./:/app # for nodemon
+      - /app/node_modules # ignore local node_modules: https://stackoverflow.com/a/62799209
+  mongodb:
+    image: "mongo:7"
+    ports:
+      - "27017:27017"
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+      MONGO_INITDB_DATABASE: admin
+  mongo-init:
+    build:
+      context: .
+      dockerfile: Dockerfile.init-mongo
+    depends_on:
+      - mongodb
+    links:
+      - mongodb

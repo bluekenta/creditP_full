@@ -1,0 +1,38 @@
+{
+  "name": "code-exercise",
+  "version": "1.0.0",
+  "description": "This project contains the Credit Pulse code-exercise.",
+  "type": "module",
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "scripts": {
+    "test": "set -o allexport; [ ! -f .env.local ] || . .env.local; node --experimental-vm-modules node_modules/jest/bin/jest.js --debug=$DEBUG_UNIT_TESTS; set +o allexport; exit $rv",
+    "posttest": "npm run lint",
+    "lint": "eslint 'lib/**/*.js'",
+    "seed": "node db/seed-local.js"
+  },
+  "dependencies": {
+    "@apollo/server": "^4.11.0",
+    "graphql": "^16.9.0",
+    "graphql-tag": "^2.12.6",
+    "mongodb": "^6.9.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.57.0",
+    "eslint-config-standard": "^17.1.0",
+    "eslint-plugin-import": "^2.29.0",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^6.1.1",
+    "express": "^4.21.0",
+    "jest": "^29.7.0",
+    "nodemon": "^3.1.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com:creditpulse/code-exercise.git"
+  },
+  "author": "mac@creditpulse.com",
+  "license": "ISC",
+  "homepage": "https://github.com/creditpulse/code-exercise#readme"
+}

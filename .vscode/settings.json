@@ -1,0 +1,17 @@
+{
+    "editor.insertSpaces": true,
+    "editor.tabSize": 2,
+    "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": "explicit"
+    },
+    "eslint.format.enable": true,
+    "eslint.ignoreUntitled": true,
+    "editor.formatOnSave": true,
+    "eslint.nodeEnv": "development",
+    "eslint.validate": [
+        "javascript",
+        "javascriptreact",
+        "html",
+        "typescriptreact"
+    ]
+}

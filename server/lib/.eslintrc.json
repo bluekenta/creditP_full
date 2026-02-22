@@ -1,0 +1,15 @@
+{
+  "extends": [ "standard" ],
+  "rules": {
+    "semi": [2, "always"],
+    "array-bracket-spacing": [ "error", "always" ],
+    "arrow-parens": [ "error", "always" ],
+    "comma-dangle": [ "error", "always-multiline" ],
+    "newline-per-chained-call": [ "error", { "ignoreChainWithDepth": 2 } ],
+    "no-lonely-if": [ "error" ],
+    "object-curly-newline": [ "error", { "multiline": true, "minProperties": 3, "consistent": true } ],
+    "object-curly-spacing": [ "error", "always" ],
+    "quote-props": [ "error", "as-needed", { "numbers": true } ],
+    "space-before-function-paren": ["error", "always"]
+  }
+}

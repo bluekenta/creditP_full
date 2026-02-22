@@ -1,0 +1,259 @@
+{
+  "extends": [
+    "standard",
+    "plugin:react/recommended",
+    "plugin:react/jsx-runtime"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "plugins": [
+    "react",
+    "react-hooks"
+  ],
+  "env": {
+    "browser": true,
+    "jest": true
+  },
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  },
+  "rules": {
+    "semi": [
+      2,
+      "always"
+    ],
+    "array-bracket-newline": [
+      "error",
+      {
+        "multiline": true
+      }
+    ],
+    "array-bracket-spacing": [
+      "error",
+      "always"
+    ],
+    "array-element-newline": [
+      "error",
+      {
+        "multiline": true,
+        "minItems": 3
+      }
+    ],
+    "arrow-parens": [
+      "error",
+      "always"
+    ],
+    "comma-dangle": [
+      "error",
+      "always-multiline"
+    ],
+    "newline-per-chained-call": [
+      "error",
+      {
+        "ignoreChainWithDepth": 2
+      }
+    ],
+    "no-lonely-if": [
+      "error"
+    ],
+    "object-curly-newline": [
+      "error",
+      {
+        "multiline": true,
+        "minProperties": 3,
+        "consistent": true
+      }
+    ],
+    "object-curly-spacing": [
+      "error",
+      "always"
+    ],
+    "object-property-newline": [
+      "error",
+      {
+        "allowAllPropertiesOnSameLine": false
+      }
+    ],
+    "quote-props": [
+      "error",
+      "as-needed",
+      {
+        "numbers": true
+      }
+    ],
+    "space-before-function-paren": [
+      "error",
+      "always"
+    ],
+    "jsx-quotes": [
+      2,
+      "prefer-single"
+    ],
+    "react/jsx-closing-tag-location": [
+      1,
+      {
+        "location": "line-aligned"
+      }
+    ],
+    "react/jsx-closing-bracket-location": [
+      1,
+      {
+        "nonEmpty": "line-aligned",
+        "selfClosing": "tag-aligned"
+      }
+    ],
+    "react/jsx-first-prop-new-line": [
+      1,
+      "multiline-multiprop"
+    ],
+    "react/jsx-max-props-per-line": [
+      1,
+      {
+        "when": "always",
+        "maximum": 1
+      }
+    ],
+    "react/jsx-indent": [
+      1,
+      2,
+      {
+        "checkAttributes": true,
+        "indentLogicalExpressions": true
+      }
+    ],
+    "react/jsx-indent-props": [
+      1,
+      2
+    ],
+    "react/jsx-tag-spacing": [
+      1,
+      {
+        "beforeSelfClosing": "always",
+        "beforeClosing": "never",
+        "afterOpening": "never",
+        "closingSlash": "never"
+      }
+    ],
+    "react/jsx-sort-props": [
+      1,
+      {
+        "callbacksLast": true,
+        "shorthandFirst": true,
+        "ignoreCase": true,
+        "reservedFirst": [
+          "key",
+          "ref"
+        ]
+      }
+    ],
+    "react/no-array-index-key": [
+      1
+    ],
+    "react/jsx-equals-spacing": [
+      1,
+      "never"
+    ],
+    "react/jsx-fragments": [
+      1,
+      "syntax"
+    ],
+    "react/jsx-no-useless-fragment": [
+      1
+    ],
+    "react/jsx-max-depth": [
+      1,
+      {
+        "max": 10
+      }
+    ],
+    "react/jsx-one-expression-per-line": [
+      1,
+      {
+        "allow": "single-child"
+      }
+    ],
+    "react/jsx-pascal-case": [
+      1,
+      {
+        "allowAllCaps": false,
+        "allowNamespace": true
+      }
+    ],
+    "react/jsx-props-no-multi-spaces": [
+      1
+    ],
+    "react/no-object-type-as-default-prop": [
+      1
+    ],
+    "react/no-this-in-sfc": [
+      1
+    ],
+    "react/no-unused-prop-types": [
+      1
+    ],
+    "react/prefer-stateless-function": [
+      1
+    ],
+    "react/require-default-props": [
+      1,
+      {
+        "forbidDefaultForRequired": true,
+        "functions": "defaultProps"
+      }
+    ],
+    "react/self-closing-comp": [
+      1,
+      {
+        "component": true,
+        "html": true
+      }
+    ],
+    "react/sort-default-props": [
+      1,
+      {
+        "ignoreCase": true
+      }
+    ],
+    "react/sort-prop-types": [
+      1,
+      {
+        "ignoreCase": true,
+        "sortShapeProp": true
+      }
+    ],
+    "react/style-prop-object": [
+      1
+    ],
+    "react/void-dom-elements-no-children": [
+      1
+    ],
+    "react/button-has-type": [
+      1
+    ],
+    "react/checked-requires-onchange-or-readonly": [
+      1
+    ],
+    "react/hook-use-state": [
+      1
+    ],
+    "react/iframe-missing-sandbox": [
+      1
+    ],
+    "react/jsx-curly-newline": [
+      1,
+      {
+        "multiline": "consistent",
+        "singleline": "consistent"
+      }
+    ],
+    "react/jsx-curly-spacing": [
+      1,
+      {
+        "when": "never"
+      }
+    ],
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "warn"
+  }
+}
