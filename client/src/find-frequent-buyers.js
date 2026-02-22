@@ -23,7 +23,7 @@ const findFrequentBuyers = (purchases, category, minimumPurchaseCount = 1) => {
     }
   }
 
-  return [...map.values()].filter((r) => r.count >= minimumPurchaseCount);
+  return [ ...map.values() ].filter((r) => r.count >= minimumPurchaseCount);
 };
 
 export default findFrequentBuyers;

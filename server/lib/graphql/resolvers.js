@@ -12,17 +12,17 @@ export const resolvers = {
         throw error;
       }
     },
-    getFrequentBuyers: async (root, { category, minimumPurchaseCount }) => {
+    getFrequentBuyers: async (root, { category, minimumPurchaseCount, limit, offset }) => {
       try {
-        return await getFrequentBuyers(category, minimumPurchaseCount ?? 1);
+        return await getFrequentBuyers(category, minimumPurchaseCount ?? 1, limit ?? 20, offset ?? 0);
       } catch (error) {
         console.log(error);
         throw error;
       }
     },
-    getSuspiciousPurchases: async () => {
+    getSuspiciousPurchases: async (root, { limit, offset }) => {
       try {
-        return await getSuspiciousPurchases();
+        return await getSuspiciousPurchases(limit ?? 20, offset ?? 0);
       } catch (error) {
         console.log(error);
         throw error;
