@@ -49,6 +49,8 @@ async function seed() {
     const data = JSON.parse(readFileSync(path, 'utf8'));
     await collection.deleteMany({});
     const result = await collection.insertMany(data);
+    await collection.createIndex({ category: 1, customerId: 1 });
+    await collection.createIndex({ amount: 1 });
     console.log(`Seeded ${result.insertedCount} purchases into ${dbName}.purchases`);
   } finally {
     await client.close();

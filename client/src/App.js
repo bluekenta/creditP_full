@@ -1,7 +1,6 @@
-import { useQuery, gql } from '@apollo/client';
 import {
   Container,
-  Message,
+  // Message,
   Menu,
   Tab,
   TabPane,
@@ -11,22 +10,7 @@ import {
 import FrequentBuyers from './FrequentBuyers.js';
 import SuspiciousPurchases from './SuspiciousPurchases.js';
 
-export const GET_PURCHASES = gql`
-  query PurchasesQuery {
-    getAllPurchases {
-      id
-      customerId
-      category
-      amount
-    }
-  }
-`;
-
 function App () {
-  const {
-    loading, error, data,
-  } = useQuery(GET_PURCHASES);
-
   return (
     <>
       <Menu stackable>
@@ -43,20 +27,14 @@ function App () {
           as='h3'
           content='Credit Pulse Purchase Analyzer'
         />
-        {(!!error) && (
-          <Message error>
-            <Message.Header>Unable to load data</Message.Header>
-            {error.message}
-          </Message>
-        )}
         <Tab panes={[
           {
             menuItem: 'Frequent Buyers',
-            render: () => <TabPane loading={loading}><FrequentBuyers purchases={data?.getAllPurchases || []} /></TabPane>,
+            render: () => <TabPane><FrequentBuyers /></TabPane>,
           },
           {
             menuItem: 'Suspicious Purchases',
-            render: () => <TabPane loading={loading}><SuspiciousPurchases purchases={data?.getAllPurchases || []} /></TabPane>,
+            render: () => <TabPane><SuspiciousPurchases /></TabPane>,
           },
         ]}
         />

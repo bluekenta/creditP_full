@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { PropTypes } from 'prop-types';
+import { useQuery, gql } from '@apollo/client';
 import {
   Grid,
   GridColumn,
@@ -16,7 +16,15 @@ import {
   Icon,
 } from 'semantic-ui-react';
 
-import findFrequentBuyers from './find-frequent-buyers.js';
+const GET_FREQUENT_BUYERS = gql`
+  query GetFrequentBuyers($category: String!, $minimumPurchaseCount: Int) {
+    getFrequentBuyers(category: $category, minimumPurchaseCount: $minimumPurchaseCount) {
+      customerId
+      count
+      totalAmount
+    }
+  }
+`;
 
 const CATEGORY_OPTIONS = [
   {
@@ -56,15 +64,43 @@ const CATEGORY_OPTIONS = [
   },
 ];
 
-const FrequentBuyers = ({ purchases }) => {
+const FrequentBuyers = () => {
   const [ minPurchases, setMinPurchases ] = useState(2);
   const [ selectedCategory, setSelectedCategory ] = useState(CATEGORY_OPTIONS[0].value);
   const [ sortedColumn, setSortedColumn ] = useState(null);
   const [ sortDirection, setSortDirection ] = useState(null);
 
-  const frequentBuyers = findFrequentBuyers(purchases, selectedCategory, minPurchases);
+  const category = selectedCategory || CATEGORY_OPTIONS[0].value;
+  const minimumPurchaseCount = Math.max(1, parseInt(minPurchases, 10) || 1);
+
+  const {
+    data, loading, error,
+  } = useQuery(GET_FREQUENT_BUYERS, {
+    variables: {
+      category,
+      minimumPurchaseCount,
+    },
+  });
+  const frequentBuyers = data?.getFrequentBuyers ?? [];
+
+  if (error) {
+    const detail = error.graphQLErrors?.[0]?.message || error.networkError?.result?.errors?.[0]?.message || error.message;
+    return (
+      <Segment>
+        <Header as='h4' color='red'>Unable to load frequent buyers: {detail}</Header>
+      </Segment>
+    );
+  }
+
   return (
     <>
+      {loading && (
+        <Segment loading>
+          <div style={{ minHeight: 120 }} />
+        </Segment>
+      )}
+      {!loading && (
+      <>
       <Grid columns={3}>
         <GridColumn verticalAlign='middle'>
           <Header
@@ -133,32 +169,25 @@ const FrequentBuyers = ({ purchases }) => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {frequentBuyers.map((purchase) => (
-              <TableRow key={purchase.id}>
-                <TableCell>{purchase.customerId}</TableCell>
-                <TableCell>{purchase.count}</TableCell>
+            {frequentBuyers.map((row) => (
+              <TableRow key={row.customerId}>
+                <TableCell>{row.customerId}</TableCell>
+                <TableCell>{row.count}</TableCell>
                 <TableCell>
                   {new Intl.NumberFormat('en-US', {
                     style: 'currency',
                     currency: 'USD',
-                  }).format(purchase.totalAmount)}
+                  }).format(row.totalAmount)}
                 </TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
       )}
+        </>
+      )}
     </>
   );
-};
-
-FrequentBuyers.propTypes = {
-  purchases: PropTypes.arrayOf(PropTypes.shape({
-    amount: PropTypes.number.isRequired,
-    category: PropTypes.string.isRequired,
-    customerId: PropTypes.string.isRequired,
-    id: PropTypes.string.isRequired,
-  })).isRequired,
 };
 
 export default FrequentBuyers;

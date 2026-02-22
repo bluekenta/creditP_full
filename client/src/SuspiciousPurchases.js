@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { PropTypes } from 'prop-types';
+import { useQuery, gql } from '@apollo/client';
 import {
   Segment,
   Header,
@@ -12,15 +12,43 @@ import {
   Icon,
 } from 'semantic-ui-react';
 
-import findSuspiciousPurchases from './find-suspicious-purchases.js';
+const GET_SUSPICIOUS_PURCHASES = gql`
+  query GetSuspiciousPurchases {
+    getSuspiciousPurchases {
+      id
+      customerId
+      category
+      amount
+    }
+  }
+`;
 
-const SuspiciousPurchases = ({ purchases }) => {
+const SuspiciousPurchases = () => {
   const [ sortedColumn, setSortedColumn ] = useState(null);
   const [ sortDirection, setSortDirection ] = useState(null);
 
-  const suspiciousPurchases = findSuspiciousPurchases(purchases);
+  const {
+    data, loading, error,
+  } = useQuery(GET_SUSPICIOUS_PURCHASES);
+  const suspiciousPurchases = data?.getSuspiciousPurchases ?? [];
+
+  if (error) {
+    return (
+      <Segment>
+        <Header as='h4' color='red'>Unable to load suspicious purchases: {error.message}</Header>
+      </Segment>
+    );
+  }
+
   return (
     <>
+      {loading && (
+        <Segment loading>
+          <div style={{ minHeight: 120 }} />
+        </Segment>
+      )}
+      {!loading && (
+      <>
       <Header
         as='h3'
         content={`Suspicious Purchases (${suspiciousPurchases.length})`}
@@ -84,17 +112,10 @@ const SuspiciousPurchases = ({ purchases }) => {
           </TableBody>
         </Table>
       )}
+      </>
+      )}
     </>
   );
-};
-
-SuspiciousPurchases.propTypes = {
-  purchases: PropTypes.arrayOf(PropTypes.shape({
-    amount: PropTypes.number.isRequired,
-    category: PropTypes.string.isRequired,
-    customerId: PropTypes.string.isRequired,
-    id: PropTypes.string.isRequired,
-  })).isRequired,
 };
 
 export default SuspiciousPurchases;

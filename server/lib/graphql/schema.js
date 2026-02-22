@@ -8,7 +8,15 @@ export const typeDefs = gql`
     amount: Float!
   }
 
+  type FrequentBuyer {
+    customerId: ID!
+    count: Int!
+    totalAmount: Float!
+  }
+
   type Query {
     getAllPurchases: [Purchase]
+    getFrequentBuyers(category: String!, minimumPurchaseCount: Int): [FrequentBuyer]
+    getSuspiciousPurchases: [Purchase]
   }
 `;

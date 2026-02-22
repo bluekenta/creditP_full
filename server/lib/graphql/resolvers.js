@@ -1,16 +1,32 @@
 import getAllPurchases from '../data/get-all-purchases.js';
+import getFrequentBuyers from '../data/get-frequent-buyers.js';
+import getSuspiciousPurchases from '../data/get-suspicious-purchases.js';
 
 export const resolvers = {
   Query: {
-    getAllPurchases: async (root, args, context) => {
-      let result;
+    getAllPurchases: async () => {
       try {
-        result = await getAllPurchases();
+        return await getAllPurchases();
       } catch (error) {
         console.log(error);
         throw error;
       }
-      return result;
+    },
+    getFrequentBuyers: async (root, { category, minimumPurchaseCount }) => {
+      try {
+        return await getFrequentBuyers(category, minimumPurchaseCount ?? 1);
+      } catch (error) {
+        console.log(error);
+        throw error;
+      }
+    },
+    getSuspiciousPurchases: async () => {
+      try {
+        return await getSuspiciousPurchases();
+      } catch (error) {
+        console.log(error);
+        throw error;
+      }
     },
   },
 };

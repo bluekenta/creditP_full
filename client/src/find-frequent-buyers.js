@@ -1,34 +1,29 @@
+/**
+ * O(n) single-pass: group by (customerId, category), then filter by count.
+ * Previously O(n²) nested loops caused severe slowness with large datasets.
+ */
 const findFrequentBuyers = (purchases, category, minimumPurchaseCount = 1) => {
-  const frequentBuyers = [];
+  const key = (customerId, cat) => `${customerId}\0${cat}`;
+  const map = new Map(); // key -> { customerId, count, totalAmount }
 
   for (let i = 0; i < purchases.length; i++) {
-    const customerId = purchases[i].customerId;
-    const productCategory = purchases[i].category;
-
-    // Check if the product category matches and the customer has made multiple purchases
-    if (productCategory === category) {
-      let count = 0;
-      let totalAmount = 0;
-
-      for (let j = 0; j < purchases.length; j++) {
-        if (purchases[j].customerId === customerId && purchases[j].category === category) {
-          count++;
-          totalAmount += purchases[j].amount;
-        }
-      }
-
-      // Add the customer to frequentBuyers if they bought the product more than once
-      if (count >= minimumPurchaseCount && !frequentBuyers.includes(customerId)) {
-        frequentBuyers.push({
-          customerId,
-          count,
-          totalAmount,
-        });
-      }
+    const p = purchases[i];
+    if (p.category !== category) continue;
+    const k = key(p.customerId, p.category);
+    const cur = map.get(k);
+    if (cur) {
+      cur.count += 1;
+      cur.totalAmount += p.amount;
+    } else {
+      map.set(k, {
+        customerId: p.customerId,
+        count: 1,
+        totalAmount: p.amount,
+      });
     }
   }
 
-  return frequentBuyers;
+  return [...map.values()].filter((r) => r.count >= minimumPurchaseCount);
 };
 
 export default findFrequentBuyers;
