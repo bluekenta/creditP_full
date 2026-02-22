@@ -1,34 +1,82 @@
 import { getDb } from './db.js';
 
-const SUSPICIOUS_AMOUNT_THRESHOLD = 500;
 const DEFAULT_LIMIT = 20;
 const MAX_LIMIT = 100;
+const STANDARD_DEVIATIONS = 2;
 
 /**
- * Get a page of suspicious purchases (amount > threshold).
- * Offset-based pagination for page numbers.
+ * Suspicious = out of the ordinary for that customer's history.
+ * A purchase is flagged if amount > mean + (STANDARD_DEVIATIONS * std) for that customer.
+ * Only customers with at least 2 purchases get a baseline; single-purchase customers are skipped.
  */
 const getSuspiciousPurchases = async (limit = DEFAULT_LIMIT, offset = 0) => {
   const db = await getDb();
   const coll = db.collection('purchases');
-  const filter = { amount: { $gt: SUSPICIOUS_AMOUNT_THRESHOLD } };
-
   const cap = Math.min(Math.max(1, limit), MAX_LIMIT);
   const skip = Math.max(0, offset);
 
-  const [totalCount, results] = await Promise.all([
-    coll.countDocuments(filter),
+  const matchOutlier = {
+    $match: {
+      $expr: {
+        $and: [
+          { $ne: ['$stats.std', null] },
+          { $gte: ['$stats.n', 2] },
+          {
+            $gt: [
+              '$amount',
+              {
+                $add: [
+                  '$stats.mean',
+                  { $multiply: ['$stats.std', STANDARD_DEVIATIONS] },
+                ],
+              },
+            ],
+          },
+        ],
+      },
+    },
+  };
+
+  const basePipeline = [
+    {
+      $lookup: {
+        from: 'purchases',
+        let: { cid: '$customerId' },
+        pipeline: [
+          { $match: { $expr: { $eq: ['$customerId', '$$cid'] } } },
+          {
+            $group: {
+              _id: null,
+              mean: { $avg: '$amount' },
+              std: { $stdDevSamp: '$amount' },
+              n: { $sum: 1 },
+            },
+          },
+        ],
+        as: 'stats',
+      },
+    },
+    { $unwind: '$stats' },
+    matchOutlier,
+    { $project: { stats: 0 } },
+    { $sort: { _id: 1 } },
+  ];
+
+  const [countResult, results] = await Promise.all([
+    coll.aggregate([...basePipeline, { $count: 'total' }]).toArray(),
     coll
-      .find(filter)
-      .sort({ _id: 1 })
-      .skip(skip)
-      .limit(cap)
+      .aggregate([...basePipeline, { $skip: skip }, { $limit: cap }])
       .toArray(),
   ]);
 
-  const purchases = results.map(({ _id, ...rest }) => ({ id: _id.toString(), ...rest }));
+  const totalCount = countResult[0]?.total ?? 0;
   const totalPages = Math.max(1, Math.ceil(totalCount / cap));
   const currentPage = Math.min(Math.max(1, Math.floor(skip / cap) + 1), totalPages);
+
+  const purchases = results.map(({ _id, ...rest }) => ({
+    id: _id.toString(),
+    ...rest,
+  }));
 
   return {
     purchases,
