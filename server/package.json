@@ -9,8 +9,7 @@
   "scripts": {
     "test": "set -o allexport; [ ! -f .env.local ] || . .env.local; node --experimental-vm-modules node_modules/jest/bin/jest.js --debug=$DEBUG_UNIT_TESTS; set +o allexport; exit $rv",
     "posttest": "npm run lint",
-    "lint": "eslint 'lib/**/*.js'",
-    "seed": "node db/seed-local.js"
+    "lint": "eslint 'lib/**/*.js'"
   },
   "dependencies": {
     "@apollo/server": "^4.11.0",
